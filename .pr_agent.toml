@@ -1,0 +1,29 @@
+[config]
+model="llama3-70b-8192"
+temperature=0.0
+
+[pr_reviewer]
+require_score_review=true
+num_code_suggestions=5
+
+[pr_description]
+generate_ai_title=true
+
+[pr_code_suggestions]
+max_suggestions=5
+
+[pr_tests]
+enable=true
+
+[include]
+files = [
+  "src/**",
+  "pipelines/**"
+]
+
+[ignore]
+files = [
+  "notebooks/**",
+  "docs/**",
+  "*.md"
+]
