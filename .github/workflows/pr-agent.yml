@@ -21,15 +21,16 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Run PR-Agent Review
-        env:
-          OPENAI_API_TYPE: openai
-          OPENAI_API_BASE: https://api.groq.com/openai/v1
-          OPENAI_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          OPENAI_MODEL: groq/llama3-70b-8192
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
+      - name: Run PR-Agent (FINAL FIX)
         run: |
           pip install pr-agent
-          export CONFIG__GITHUB__USER_TOKEN=$GITHUB_TOKEN
-          pr-agent --pr_url "$PR_URL" review
+
+          echo "[github]" > .pr_agent.toml
+          echo "user_token = \"${{ secrets.GITHUB_TOKEN }}\"" >> .pr_agent.toml
+
+          export OPENAI_API_TYPE=openai
+          export OPENAI_API_BASE=https://api.groq.com/openai/v1
+          export OPENAI_API_KEY=${{ secrets.GROQ_API_KEY }}
+          export OPENAI_MODEL=groq/llama3-70b-8192
+
+          pr-agent --pr_url "${{ github.event.pull_request.html_url }}" review
