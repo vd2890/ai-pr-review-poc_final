@@ -3,28 +3,34 @@ name: AI PR Review
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    
-  issue_comment:
-    types: [created]
 
 jobs:
   pr_agent:
     runs-on: ubuntu-latest
-    
+
     permissions:
-        contents: read
-        pull-requests: write
-        issues: write
+      contents: read
+      pull-requests: write
 
     steps:
-      - name: Run PR Agent
-        uses: qodo-ai/pr-agent@main
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install PR-Agent
+        run: |
+          pip install pr-agent
+
+      - name: Run PR-Agent Review
         env:
           OPENAI_API_TYPE: openai
           OPENAI_API_BASE: https://api.groq.com/openai/v1
           OPENAI_API_KEY: ${{ secrets.GROQ_API_KEY }}
           OPENAI_MODEL: groq/llama3-70b-8192
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-          PR_AGENT_AUTO_REVIEW: "true"
-          PR_AGENT_AUTO_DESCRIBE: "true"
+        run: |
+          pr-agent review
