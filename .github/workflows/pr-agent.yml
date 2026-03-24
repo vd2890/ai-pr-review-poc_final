@@ -7,6 +7,10 @@ on:
 jobs:
   pr_agent:
     runs-on: ubuntu-latest
+    
+    permissions:
+        contents: read
+        pull-requests: write
 
     steps:
       - name: Run PR Agent
@@ -17,3 +21,6 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.GROQ_API_KEY }}
           OPENAI_MODEL: llama3-70b-8192
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+          PR_AGENT_AUTO_REVIEW: "true"
+          PR_AGENT_AUTO_DESCRIBE: "true"
